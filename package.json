@@ -4,7 +4,7 @@
 	"version": "0.5.2",
 	"repository": {
 		"type": "git",
-		"url": "git://github.com/pdlove/homebridge-smartthings.git"
+		"url": "git://github.com/peregrinator/homebridge-smartthings.git"
 	},
 	"license": "ISC",
 	"preferGlobal": true,

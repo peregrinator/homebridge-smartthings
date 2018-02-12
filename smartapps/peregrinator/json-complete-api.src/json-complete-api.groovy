@@ -6,13 +6,13 @@
  */
 definition(
     name: "JSON Complete API",
-    namespace: "pdlove",
+    namespace: "peregrinator",
     author: "Paul Lovelace",
     description: "API for JSON with complete set of devices",
     category: "SmartThings Labs",
-    iconUrl:   "https://raw.githubusercontent.com/pdlove/homebridge-smartthings/master/smartapps/JSON%401.png",
-    iconX2Url: "https://raw.githubusercontent.com/pdlove/homebridge-smartthings/master/smartapps/JSON%402.png",
-    iconX3Url: "https://raw.githubusercontent.com/pdlove/homebridge-smartthings/master/smartapps/JSON%403.png",
+    iconUrl:   "https://raw.githubusercontent.com/peregrinator/homebridge-smartthings/master/smartapps/JSON%401.png",
+    iconX2Url: "https://raw.githubusercontent.com/peregrinator/homebridge-smartthings/master/smartapps/JSON%402.png",
+    iconX3Url: "https://raw.githubusercontent.com/peregrinator/homebridge-smartthings/master/smartapps/JSON%403.png",
     oauth: true)
 
 
@@ -42,71 +42,71 @@ def copyConfig() {
             paragraph "View this SmartApp's configuration to use it in other places."
             href url:"${apiServerUrl("/api/smartapps/installations/${app.id}/config?access_token=${state.accessToken}")}", style:"embedded", required:false, title:"Config", description:"Tap, select, copy, then click \"Done\""
         }
- 
+
         section() {
         	paragraph "View the JSON generated from the installed devices."
             href url:"${apiServerUrl("/api/smartapps/installations/${app.id}/devices?access_token=${state.accessToken}")}", style:"embedded", required:false, title:"Device Results", description:"View accessories JSON"
         }
         section() {
         	paragraph "Enter the name you would like shown in the smart app list"
-        	label title:"SmartApp Label (optional)", required: false 
+        	label title:"SmartApp Label (optional)", required: false
         }
     }
 }
 
 def renderDevices() {
     def deviceData = []
-        deviceList.each { 
+        deviceList.each {
         	try {
             deviceData << [name: it.displayName,
     				basename: it.name,
-    				deviceid: it.id, 
+    				deviceid: it.id,
                     status: it.status,
                     manufacturerName: it.getManufacturerName(),
                     modelName: it.getModelName(),
                     lastTime: it.getLastActivity(),
-                    capabilities: deviceCapabilityList(it), 
-                    commands: deviceCommandList(it), 
+                    capabilities: deviceCapabilityList(it),
+                    commands: deviceCommandList(it),
                     attributes: deviceAttributeList(it)
                     ]
       		} catch (e) {
       			log.error("Error Occurred Parsing Device "+it.displayName+", Error " + e)
       		}
-        }    
-        sensorList.each { 
+        }
+        sensorList.each {
         	try {
             deviceData << [name: it.displayName,
     				basename: it.name,
-    				deviceid: it.id, 
+    				deviceid: it.id,
                     status: it.status,
                     manufacturerName: it.getManufacturerName(),
                     modelName: it.getModelName(),
                     lastTime: it.getLastActivity(),
-                    capabilities: deviceCapabilityList(it), 
-                    commands: deviceCommandList(it), 
+                    capabilities: deviceCapabilityList(it),
+                    commands: deviceCommandList(it),
                     attributes: deviceAttributeList(it)
                     ]
       		} catch (e) {
       			log.error("Error Occurred Parsing Device "+it.displayName+", Error " + e)
       		}
-        }    
-        switchList.each { 
+        }
+        switchList.each {
         	try {
             deviceData << [name: it.displayName,
     				basename: it.name,
-    				deviceid: it.id, 
+    				deviceid: it.id,
                     status: it.status,
                     manufacturerName: it.getManufacturerName(),
                     modelName: it.getModelName(),
                     lastTime: it.getLastActivity(),
-                    capabilities: deviceCapabilityList(it), 
-                    commands: deviceCommandList(it), 
+                    capabilities: deviceCapabilityList(it),
+                    commands: deviceCommandList(it),
                     attributes: deviceAttributeList(it)
                     ]
       		} catch (e) {
       			log.error("Error Occurred Parsing Device "+it.displayName+", Error " + e)
       		}
-        }    
+        }
     return deviceData
 }
 
@@ -187,9 +187,9 @@ def CommandReply(statusOut, messageOut) {
 }
 def deviceCommand() {
 	log.info("Command Request")
-	def device = findDevice(params.id)    
+	def device = findDevice(params.id)
     def command = params.command
-    
+
   	if (!device) {
 		log.error("Device Not Found")
       	CommandReply("Failure", "Device Not Found")
@@ -216,7 +216,7 @@ def deviceCommand() {
   	}
 }
 def deviceAttribute() {
-	def device = findDevice(params.id)    
+	def device = findDevice(params.id)
     def attribute = params.attribute
   	if (!device) {
     	httpError(404, "Device not found")
@@ -226,12 +226,12 @@ def deviceAttribute() {
   	}
 }
 def deviceQuery() {
-	def device = findDevice(params.id)    
-    if (!device) { 
+	def device = findDevice(params.id)
+    if (!device) {
     	device = null
         httpError(404, "Device not found")
-    } 
-    
+    }
+
     if (result) {
     	def jsonData =
         	[
@@ -290,7 +290,7 @@ def startSubscription() {
 //This simply registers the subscription.
     state.subscriptionRenewed = now()
 	def deviceJson = new groovy.json.JsonOutput().toJson([status: "Success"])
-    render contentType: "application/json", data: deviceJson    
+    render contentType: "application/json", data: deviceJson
 }
 def endSubscription() {
 //Because it takes too long to register for an api command, we don't actually unregister.
@@ -298,7 +298,7 @@ def endSubscription() {
 	state.devchanges = []
     state.subscriptionRenewed = 0
  	def deviceJson = new groovy.json.JsonOutput().toJson([status: "Success"])
-    render contentType: "application/json", data: deviceJson     
+    render contentType: "application/json", data: deviceJson
 }
 def registerAll() {
 //This has to be done at startup because it takes too long for a normal command.
@@ -327,7 +327,7 @@ def changeHandler(evt) {
 		log.debug "${uri}"
     	httpGet(uri)
     }
-  
+
   	if (state.directIP!="") {
     	//Send Using the Direct Mechanism
         def deviceData = [device: evt.deviceId, attribute: evt.name, value: evt.value, date: evt.date]
@@ -346,7 +346,7 @@ def changeHandler(evt) {
 		)
         sendHubCommand(result)
     }
-    
+
 	//Only add to the state's devchanges if the endpoint has renewed in the last 10 minutes.
     if (state.subscriptionRenewed>(now()-(1000*60*10))) {
   		if (evt.isStateChange()) {
@@ -367,7 +367,7 @@ def getChangeEvents() {
     state.subscriptionRenewed = now()
 	if (oldchanges.size()==0) {
         def deviceJson = new groovy.json.JsonOutput().toJson([status: "None"])
-	    render contentType: "application/json", data: deviceJson    
+	    render contentType: "application/json", data: deviceJson
     } else {
     	def changeJson = new groovy.json.JsonOutput().toJson([status: "Success", attributes:oldchanges])
     	render contentType: "application/json", data: changeJson
@@ -445,4 +445,3 @@ mappings {
         path("/getSubcriptionService")          { action: [GET: "getSubscriptionService"] }
     }
 }
-
